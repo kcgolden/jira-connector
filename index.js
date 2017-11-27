@@ -20,6 +20,7 @@ var dashboard = require('./api/dashboard');
 var errorStrings = require('./lib/error');
 var field = require('./api/field');
 var filter = require('./api/filter');
+var greenHopper = require('./api/green-hopper');
 var group = require('./api/group');
 var groupUserPicker = require('./api/groupUserPicker');
 var groups = require('./api/groups');
@@ -146,6 +147,7 @@ var JiraClient = module.exports = function (config) {
     this.agileApiVersion = '1.0';
     this.authApiVersion = '1';
     this.webhookApiVersion = '1.0';
+    this.greenHopperVersion = '1.0';
     this.promise = config.promise || Promise;
     this.requestLib = config.request || request;
 
@@ -198,6 +200,7 @@ var JiraClient = module.exports = function (config) {
     this.dashboard = new dashboard(this);
     this.field = new field(this);
     this.filter = new filter(this);
+    this.greenHopper = new greenHopper(this);
     this.group = new group(this);
     this.groupUserPicker = new groupUserPicker(this);
     this.groups = new groups(this);
@@ -317,6 +320,18 @@ var JiraClient = module.exports = function (config) {
             pathname: apiBasePath + version + path
         });
 
+        return decodeURIComponent(requestUrl);
+    };
+
+    this.buildGreenHopperURL = function(path) {
+        var apiBasePath = this.path_prefix + 'rest/greenhopper/';
+        var version = this.webhookApiVersion;
+        var requestUrl = url.format({
+            protocol: this.protocol,
+            hostname: this.host,
+            port: this.port,
+            pathname: apiBasePath + version + path
+        });
         return decodeURIComponent(requestUrl);
     };
 
